@@ -7,7 +7,14 @@ FZFZ_RECENT_DIRS_TOOL=${FZFZ_RECENT_DIRS_TOOL:="z"}
 
 SCRIPT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-if [[ $FZFZ_RECENT_DIRS_TOOL == "z" ]]; then
+if [[ $FZFZ_RECENT_DIRS_TOOL == "zoxide" ]]; then
+    if [[ $OSTYPE == darwin* && -z $(whence tac) ]]; then
+        REVERSER='tail -r'
+    else
+        REVERSER='tac'
+    fi
+    zoxide query -l | $REVERSER
+elif [[ $FZFZ_RECENT_DIRS_TOOL == "z" ]]; then
     if [ ! -f "$SCRIPT_PATH/z.sh" ]; then
         >&2 echo "Locally-cached copy of z.sh not found, downloading..."
         curl https://raw.githubusercontent.com/rupa/z/master/z.sh > "$SCRIPT_PATH/z.sh"
